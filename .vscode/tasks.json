@@ -1,0 +1,32 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Check home-dot-ssh",
+      "type": "process",
+      "command": "/usr/bin/bash",
+      "args": ["-c", "[ ! -d ~/.ssh ] && mkdir ~/.ssh || exit 0"],
+      "presentation": {
+        "echo": false,
+        "reveal": "never",
+        "revealProblems": "never",
+        "focus": false,
+        "panel": "new",
+        "showReuseMessage": false,
+        "clear": true,
+        "close": true
+      },
+      "windows": {
+        "command": "wsl.exe",
+        "args": [
+          "--shell-type standard",
+          "--",
+          "[ ! -d ~/.ssh ] && mkdir ~/.ssh || exit 0"
+        ]
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
+  ]
+}
