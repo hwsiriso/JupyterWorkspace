@@ -8,7 +8,7 @@
 
   "mounts": [
     // "source=${localEnv:HOME}/.gitconfig,target=/home/jovyan/.gitconfig,type=bind,consistency=cached",
-    "source=${localEnv:HOME}/.ssh,target=/home/${containerEnv:NB_USER}/.ssh,type=bind,consistency=cached",
+    "source=${localEnv:HOME}/.ssh,target=/home/jovyan/.ssh,type=bind,consistency=cached",
     "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind,consistency=cached"
   ],
   "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
