@@ -1,40 +1,110 @@
 {
-	"name": "Jupyter Data Science Notebooks (Community)",
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
-	"overrideCommand": false,
-	
-	// Forward Jupyter port locally, mark required
-	"forwardPorts": [8888],
-	"portsAttributes": {
-		"8888": {
-			"label": "Jupyter",
-			"requireLocalPort": true,
-			"onAutoForward": "ignore"
-		}
-	},
+  "name": "Jupyter Data Science Notebooks (olwimo)",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "overrideCommand": false,
+  "shutdownAction": "stopContainer",
 
-	// Configure tool-specific properties.
-	"customizations": {
-		// Configure properties specific to VS Code.
-		"vscode": {
-			// Set *default* container specific settings.json values on container create.
-			"settings": { 
-				"python.defaultInterpreterPath": "/opt/conda/bin/python"
-			},
-			
-			// Add the IDs of extensions you want installed when the container is created.
-			"extensions": [
-				"ms-python.python",
-				"ms-toolsai.jupyter"
-			]
-		}
-	},
+  "mounts": [
+    // "source=${localEnv:HOME}/.gitconfig,target=/home/jovyan/.gitconfig,type=bind,consistency=cached",
+    // "source=${localEnv:HOME}/.ssh,target=/home/${containerEnv:NB_USER}/.ssh,type=bind,consistency=cached",
+    "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind,consistency=cached"
+  ],
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  "workspaceFolder": "/workspace",
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "pip3 install --user -r requirements.txt",
+  // Forward Jupyter port locally, mark required
+  "forwardPorts": [8888], // 5000, 9000
+  "portsAttributes": {
+    "8888": {
+      "label": "Jupyter",
+      "requireLocalPort": true,
+      "onAutoForward": "ignore"
+    }
+  },
+  "otherPortsAttributes": {
+    "onAutoForward": "ignore"
+  },
+  "remoteEnv": {
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+  },
 
-	// Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
-	"remoteUser": "jovyan"
+  "runArgs": [
+    "--gpus",
+    "all"
+    // "--gpus=all"
+    // "--runtime=nvidia"
+  ],
+  // "containerEnv": {
+  // 	"PATH": "${containerEnv:PATH}:/usr/local/cuda/bin",
+  // 	"LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64",
+  // 	"XLA_FLAGS": "--xla_gpu_cuda_data_dir=/usr/local/cuda"
+  // },
+  // // "privileged": true,
+  // "hostRequirements": {
+  // 	"gpu": "optional"
+  // },
+
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {
+      "version": "latest",
+      "moby": true,
+      "dockerDashComposeVersion": "v2"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/nvidia-cuda:1": {
+      "installCudnn": true,
+      "installNvtx": true,
+      "cudaVersion": "11.8",
+      "cudnnVersion": "8.6.0.163"
+    }
+  },
+
+  // Configure tool-specific properties.
+  "customizations": {
+    // Configure properties specific to VS Code.
+    "vscode": {
+      // Set *default* container specific settings.json values on container create.
+      "settings": {
+        "python.defaultInterpreterPath": "/opt/conda/bin/python",
+        "files.eol": "\n"
+        // "python.terminal.activateEnvironment": false
+      },
+
+      // Add the IDs of extensions you want installed when the container is created.
+      "extensions": [
+        "mgmcdermott.vscode-language-babel",
+        "dbaeumer.vscode-eslint",
+        "freebroccolo.input-assist",
+        "ms-python.isort",
+        "julialang.language-julia",
+        // "ms-toolsai.jupyter",
+        "ms-toolsai.vscode-jupyter-cell-tags",
+        "ms-toolsai.jupyter-keymap",
+        "ms-toolsai.jupyter-renderers",
+        "ms-toolsai.vscode-jupyter-slideshow",
+        "ms-python.vscode-pylance",
+        "esbenp.prettier-vscode",
+        "msrvida.vscode-sanddance",
+        "redhat.vscode-yaml",
+        "ms-python.python",
+        "ms-toolsai.jupyter",
+        "reditorsupport.r",
+        "ms-azuretools.vscode-docker",
+        "nvidia.nsight-vscode-edition"
+      ]
+    }
+  },
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  // "postCreateCommand": "pip3 install --user -r requirements.txt",
+  // "postStartCommand": "nohup bash -c 'jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root &'",
+  // "postCreateCommand": "pip3 install --user jupyter tensorflow",
+
+  // Set `remoteUser` to `root` to connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+  "remoteUser": "jovyan",
+  "containerUser": "jovyan"
 }
