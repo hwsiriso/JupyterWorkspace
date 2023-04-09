@@ -27,6 +27,7 @@
           "command": "wsl.exe",
           "args": [
             "--shell-type standard",
+            "--system",
             "--",
             "[ ! -d ~/.ssh ] && mkdir ~/.ssh || exit 0"
           ]
