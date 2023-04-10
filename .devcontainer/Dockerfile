@@ -24,7 +24,7 @@ RUN apt-get update \
 #  && Rscript -e 'install.packages("languageserver",repos = "https://mirrors.dotsrc.org/cran/")\n\
 # install.packages("httpgd",repos = "https://mirrors.dotsrc.org/cran/")'
 #  && rm -rf /home/jovyan/work \
-#  && ln -s /workspace/Main /home/jovyan/workspace
+#  && ln -s /workspace/src /home/jovyan/workspace
 
 # [Optional] If your pip requirements rarely change, uncomment this section to add them to the image.
 # COPY requirements.txt /tmp/pip-tmp/
@@ -51,7 +51,7 @@ RUN apt-get update \
 #     && Rscript -e 'install.packages("languageserver",repos = "https://mirrors.dotsrc.org/cran/")\n\
 # install.packages("httpgd",repos = "https://mirrors.dotsrc.org/cran/")'
 
-ENV NOTEBOOK_ARGS="--notebook-dir=/workspace/Main ${NOTEBOOK_ARGS}"
+ENV NOTEBOOK_ARGS="--notebook-dir=/workspace/src ${NOTEBOOK_ARGS}"
 
 USER ${NB_UID}
 
@@ -67,4 +67,4 @@ RUN mamba install --yes \
  && fix-permissions "/home/${NB_USER}" \
  && chmod -R go-w /home/${NB_USER}/.oh-my-zsh
 
-# WORKDIR /workspace/Main
+# WORKDIR /workspace/src
