@@ -30,12 +30,12 @@
     "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
   },
 
-  "runArgs": [
-    "--gpus",
-    "all"
-    // "--gpus=all"
-    // "--runtime=nvidia"
-  ],
+  // "runArgs": [
+  //   "--gpus",
+  //   "all"
+  //   // "--gpus=all"
+  //   // "--runtime=nvidia"
+  // ],
   // "containerEnv": {
   // 	"PATH": "${containerEnv:PATH}:/usr/local/cuda/bin",
   // 	"LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64",
@@ -54,12 +54,12 @@
     },
     "ghcr.io/devcontainers/features/node:1": {
       "version": "latest"
-    },
-    "ghcr.io/devcontainers/features/nvidia-cuda:1": {
-      "installCudnn": true,
-      "installNvtx": true,
-      "cudaVersion": "11.8",
-      "cudnnVersion": "8.6.0.163"
+    // },
+    // "ghcr.io/devcontainers/features/nvidia-cuda:1": {
+    //   "installCudnn": true,
+    //   "installNvtx": true,
+    //   "cudaVersion": "11.8",
+    //   "cudnnVersion": "8.6.0.163"
     }
   },
 
