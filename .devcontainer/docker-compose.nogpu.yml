@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      - POSTGRES_PASSWORD=alpine
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  
+  adminer:
+    image: adminer:latest
+    restart: unless-stopped
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+  
+  jupyter:
+    build: ./nogpu
+    container_name: jupyter
+    restart: no
+    depends_on:
+      - db
+    volumes:
+      - type: bind
+        source: ..
+        target: /workspace
+      - type: bind
+        source: ${HOME}/.ssh
+        target: /home/jovyan/.ssh
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker-host.sock
+    user: jovyan
+    init: true
+
+volumes:
+  pgdata:

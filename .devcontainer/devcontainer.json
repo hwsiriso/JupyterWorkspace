@@ -1,25 +1,33 @@
 {
   "name": "Jupyter Data Science Notebooks (olwimo)",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
+  "dockerComposeFile": "docker-compose.yml",
   "overrideCommand": false,
-  "shutdownAction": "stopContainer",
+  "shutdownAction": "stopCompose",
+  "init": true,
+  "service": "jupyter",
+  "runServices": ["db", "adminer", "jupyter"],
 
-  "mounts": [
-    // "source=${localEnv:HOME}/.gitconfig,target=/home/jovyan/.gitconfig,type=bind,consistency=cached",
-    "source=${localEnv:HOME}/.ssh,target=/home/jovyan/.ssh,type=bind,consistency=cached",
-    "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind,consistency=cached"
-  ],
-  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
+  // "mounts": [
+  //   // "source=${localEnv:HOME}/.gitconfig,target=/home/jovyan/.gitconfig,type=bind,consistency=cached",
+  //   "source=${localEnv:HOME}/.ssh,target=/home/jovyan/.ssh,type=bind,consistency=cached",
+  //   "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind,consistency=cached"
+  // ],
+  // "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind",
   "workspaceFolder": "/workspace",
 
   // Forward Jupyter port locally, mark required
-  "forwardPorts": [8888], // 5000, 9000
+  "forwardPorts": ["jupyter:8888", "adminer:8080"], // 5000, 9000
   "portsAttributes": {
-    "8888": {
+    "jupyter:8888": {
       "label": "Jupyter",
       "requireLocalPort": true,
+      "elevateIfNeeded": true,
+      "onAutoForward": "ignore"
+    },
+    "adminer:8080": {
+      "label": "Adminer",
+      "requireLocalPort": true,
+      "elevateIfNeeded": true,
       "onAutoForward": "ignore"
     }
   },
@@ -30,12 +38,12 @@
     "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
   },
 
-  "runArgs": [
-    "--gpus",
-    "all"
-    // "--gpus=all"
-    // "--runtime=nvidia"
-  ],
+  // "runArgs": [
+  //   "--gpus",
+  //   "all"
+  //   // "--gpus=all"
+  //   // "--runtime=nvidia"
+  // ],
   // "containerEnv": {
   // 	"PATH": "${containerEnv:PATH}:/usr/local/cuda/bin",
   // 	"LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/extras/CUPTI/lib64",
@@ -54,12 +62,12 @@
     },
     "ghcr.io/devcontainers/features/node:1": {
       "version": "latest"
-    },
-    "ghcr.io/devcontainers/features/nvidia-cuda:1": {
-      "installCudnn": true,
-      "installNvtx": true,
-      "cudaVersion": "11.8",
-      "cudnnVersion": "8.6.0.163"
+    // },
+    // "ghcr.io/devcontainers/features/nvidia-cuda:1": {
+    //   "installCudnn": true,
+    //   "installNvtx": true,
+    //   "cudaVersion": "11.8",
+    //   "cudnnVersion": "8.6.0.163"
     }
   },
 
@@ -82,10 +90,10 @@
         "ms-python.isort",
         "julialang.language-julia",
         // "ms-toolsai.jupyter",
-        "ms-toolsai.vscode-jupyter-cell-tags",
-        "ms-toolsai.jupyter-keymap",
-        "ms-toolsai.jupyter-renderers",
-        "ms-toolsai.vscode-jupyter-slideshow",
+        // "ms-toolsai.vscode-jupyter-cell-tags",
+        // "ms-toolsai.jupyter-keymap",
+        // "ms-toolsai.jupyter-renderers",
+        // "ms-toolsai.vscode-jupyter-slideshow",
         "ms-python.vscode-pylance",
         "esbenp.prettier-vscode",
         "msrvida.vscode-sanddance",
@@ -96,11 +104,14 @@
         "ms-azuretools.vscode-docker",
         "nvidia.nsight-vscode-edition",
         "james-yu.latex-workshop",
-        "ms-vscode.hexeditor"
+        "ms-vscode.hexeditor",
+        "rdebugger.r-debugger",
+        "yzhang.markdown-all-in-one"
       ]
     }
   },
 
+  "initializeCommand": "cd .devcontainer && ./setup.sh",
   // Use 'postCreateCommand' to run commands after the container is created.
   // "postCreateCommand": "pip3 install --user -r requirements.txt",
   // "postStartCommand": "nohup bash -c 'jupyter notebook --ip=0.0.0.0 --port=8888 --allow-root &'",

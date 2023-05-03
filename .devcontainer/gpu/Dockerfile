@@ -6,12 +6,13 @@ FROM jupyter/datascience-notebook
 # https://github.com/microsoft/vscode-dev-containers/tree/main/script-library#development-container-scripts
 # But that script assumes that the main non-root user (in this case jovyan)
 # is in a group with the same name (in this case jovyan).  So we must first make that so.
-COPY library-scripts/common-debian.sh /tmp/library-scripts/
+COPY library-scripts/*.sh /tmp/library-scripts/
 USER root
 RUN apt-get update \
  && groupadd ${NB_USER} \
  && usermod -g ${NB_USER} -a -G users ${NB_USER} \
  && bash /tmp/library-scripts/common-debian.sh \
+ && bash /tmp/library-scripts/nvidia-cuda.sh \
  && apt-get clean -y && rm -rf /var/lib/apt/lists/* /tmp/library-scripts
 #  && conda install -c conda-forge radian \
 #  && mamba install --yes \
@@ -60,11 +61,14 @@ USER ${NB_UID}
 # SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 RUN mamba install --yes \
-    'radian' \
     'tensorflow' \
+    'ipykernel' \
+    'radian' \
     'r-httpgd' \
     'r-languageserver' \
+    'r-irkernel' \
  && mamba clean --all -f -y \
+ && Rscript -e 'IRkernel::installspec()' \
  && fix-permissions "${CONDA_DIR}" \
  && fix-permissions "/home/${NB_USER}" \
  && chmod -R go-w /home/${NB_USER}/.oh-my-zsh
