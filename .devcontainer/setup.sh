@@ -2,7 +2,7 @@
 
 [ -L ./docker-compose.yml ] && rm ./docker-compose.yml
 
-if [ -n "$(which nvidia-ctk)" ]; then
+if [ -n "$(which nvidia-smi)" ]; then
     ln -sf ./docker-compose.gpu.yml ./docker-compose.yml
 else
     ln -sf ./docker-compose.nogpu.yml ./docker-compose.yml
