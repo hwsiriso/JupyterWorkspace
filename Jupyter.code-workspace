@@ -3,6 +3,10 @@
     {
       "path": "src",
       "name": "Jupyter"
+    },
+    {
+      "path": "examples",
+      "name": "Examples"
     }
   ],
   "tasks": {
